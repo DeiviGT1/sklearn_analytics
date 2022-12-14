@@ -11,15 +11,20 @@
 <h4> 🔨 En la universidad tomé una clase llamada "fundamentos de analitica" donde aprendimos a utilizar diversos modelos de machine learning por medio de la libreria Scikit-Learn en Python los cuales están plasmados en este repositorio 🔨 </h4>
 
 <br>
+
 ## 📁 Acceso al proyecto
 
 **Este proyecto puede ser descargado como archivo ZIP o realizando una conexión con el http por medio de git**
 
 <br>
+
 ## 🛠️ Abre y ejecuta el proyecto
 
 **Se puede correr el archivo desde la terminal en cualquier sistema operativo**
+
 <br>
+<br>
+
 ## ✅ Tecnologias usadas
 
 - **Python**<br>
