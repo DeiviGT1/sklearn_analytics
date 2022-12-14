@@ -96,91 +96,56 @@ def pregunta_04():
     from sklearn.pipeline import Pipeline
     from sklearn.naive_bayes import BernoulliNB
 
-    # Importe CountVetorizer
-    # Importe GridSearchCV
-    # Importe Pipeline
-    # Importe BernoulliNB
-    # Cargue las variables.
-    x_train, _, y_train, _ = pregunta_02()
-
-    # Obtenga el analizador de la pregunta 3.
+    x_train, x_test, y_train, y_test = pregunta_02()
     analyzer = pregunta_03()
-
-    # Cree una instancia de CountVectorizer que use el analizador de palabras
-    # de la pregunta 3. Esta instancia debe retornar una matriz binaria. El
-    # límite superior para la frecuencia de palabras es del 100% y un límite
-    # inferior de 5 palabras. Solo deben analizarse palabras conformadas por
-    # letras.
-    countVectorizer = ____(
-        analyzer=____,
-        lowercase=____,
-        stop_words=____,
-        token_pattern=____,
-        binary=____,
-        max_df=____,
-        min_df=____,
+    countVectorizer = CountVectorizer(
+        analyzer=analyzer,
+        lowercase=True,
+        stop_words="english",
+        token_pattern="word",
+        binary=True,
+        max_df=1.0,
+        min_df=5,
     )
-
-    # Cree un pipeline que contenga el CountVectorizer y el modelo de BernoulliNB.
-    pipeline = ____(
+    pipeline = Pipeline(
         steps=[
-            ("____", ____),
-            ("____", ____()),
+            ("countVectorizer", countVectorizer),
+            ("BernoulliNB", BernoulliNB()),
+
         ],
     )
-
-    # Defina un diccionario de parámetros para el GridSearchCV. Se deben
-    # considerar 10 valores entre 0.1 y 1.0 para el parámetro alpha de
-    # BernoulliNB.
     param_grid = {
-        "____": np.____(____, ____, ____),
+        "BernoulliNB__alpha": np.arange(0.1, 1.1, 0.1),
     }
-
-    # Defina una instancia de GridSearchCV con el pipeline y el diccionario de
-    # parámetros. Use cv = 5, y "accuracy" como métrica de evaluación
-    gridSearchCV = ____(
-        estimator=____,
-        param_grid=____,
-        cv=____,
-        scoring=____,
-        refit=____,
-        return_train_score=____,
+    gridSearchCV = GridSearchCV(
+        estimator=pipeline,
+        param_grid=param_grid,
+        cv=5,
+        scoring="accuracy",
     )
-
-    # Búsque la mejor combinación de regresores
     gridSearchCV.fit(x_train, y_train)
 
-    # Retorne el mejor modelo
     return gridSearchCV
-
 
 def pregunta_05():
     """
     Evaluación del modelo
     -------------------------------------------------------------------------------------
     """
-
-    # Importe confusion_matrix
-    from ____ import ____
-
-    # Obtenga el pipeline de la pregunta 3.
+    from sklearn.metrics import confusion_matrix
+    
     gridSearchCV = pregunta_04()
-
-    # Cargue las variables.
     X_train, X_test, y_train, y_test = pregunta_02()
-
-    # Evalúe el pipeline con los datos de entrenamiento usando la matriz de confusion.
-    cfm_train = ____(
-        y_true=____,
-        y_pred=____.____(____),
+    cfm_train = confusion_matrix(
+        y_true=y_train,
+        y_pred=gridSearchCV.predict(X_train),
     )
 
-    cfm_test = ____(
-        y_true=____,
-        y_pred=____.____(____),
+    cfm_test = confusion_matrix(
+        y_true=y_test,
+        y_pred=gridSearchCV.predict(X_test),
     )
-
-    # Retorne la matriz de confusion de entrenamiento y prueba
+    
     return cfm_train, cfm_test
 
 
@@ -189,16 +154,8 @@ def pregunta_06():
     Pronóstico
     -------------------------------------------------------------------------------------
     """
-
-    # Obtenga el pipeline de la pregunta 3.
     gridSearchCV = pregunta_04()
+    x_tagged, y_tagged, x_untagged, y_untagged = pregunta_01()
+    y_untagged_pred = gridSearchCV.predict(x_untagged)
 
-    # Cargue los datos generados en la pregunta 01.
-    _, _, X_untagged, _ = pregunta_01()
-
-    # pronostique la polaridad del sentimiento para los datos
-    # no etiquetados
-    y_untagged_pred = ____.____(____)
-
-    # Retorne el vector de predicciones
     return y_untagged_pred
